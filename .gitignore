@@ -1,0 +1,10 @@
+#ignore all cpp product:
+*.o
+*.O
+run_model
+
+#ignore output runs directory:
+runs/*
+!runs/.gitkeep
+#ignore when running with nohup:
+nohup.out
