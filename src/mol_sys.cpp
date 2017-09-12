@@ -198,7 +198,7 @@ void Mol_Sys::monte_carlo()
 			temp_total_pot += potential[j];
 		}
 		current_total_pot = get_all_pair_potential_of_index(num_mol_chosen);
-		if (temp_total_pot <= current_total_pot)
+		if (temp_total_pot <= current_total_pot && mol_chosen.m_mol_type == lc)
 		{
 			update_sys(mol_chosen, num_mol_chosen, potential, temp_total_pot - current_total_pot);
 		}
@@ -206,7 +206,7 @@ void Mol_Sys::monte_carlo()
 		{
 			prob = ((double)rand() / (RAND_MAX));
 			dE = get_all_pair_potential_of_index(num_mol_chosen) - temp_total_pot;
-			if (prob < exp(dE / (m_temperature_range[m_current_index_temp] * K_B)))
+			if (prob < exp(dE / (m_temperature_range[m_current_index_temp] * K_B)) && mol_chosen.m_mol_type == lc)
 			{
 				update_sys(mol_chosen, num_mol_chosen, potential, temp_total_pot - current_total_pot);
 			}
