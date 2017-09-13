@@ -46,6 +46,7 @@ void Mol_Sys::start_cooling()
 #ifdef SHOW_TEMP_TIMMING
 	clock_t prev, curr;
 	double duration;
+	double debug_count=0;
 	curr = clock();
 #endif // SHOW_TEMP_TIMMING
 
@@ -67,6 +68,13 @@ void Mol_Sys::start_cooling()
 		curr = clock();
 		duration = (curr - prev) / (double)CLOCKS_PER_SEC;
 		cout << "temperature index " << m_current_index_temp << " took " << duration << " secs" << endl;
+
+		cout<<"pairs:"<<endl;
+		for (unsigned int i = 0; i < m_molecules.size(); i++){
+		  cout<<get_all_pair_potential_of_index(i)<<endl;
+		  debug_count+=get_all_pair_potential_of_index(i);}
+		cout<<"system potential:"<< m_potential<<endl;
+		cout<<"calc potential:"<< debug_count/2<<endl;
 #endif // SHOW_TEMP_TIMMING
 
 	}
@@ -198,17 +206,18 @@ void Mol_Sys::monte_carlo()
 			temp_total_pot += potential[j];
 		}
 		current_total_pot = get_all_pair_potential_of_index(num_mol_chosen);
+                dE = current_total_pot - temp_total_pot;
 		if (temp_total_pot <= current_total_pot && mol_chosen.m_mol_type == lc)
 		{
-			update_sys(mol_chosen, num_mol_chosen, potential, temp_total_pot - current_total_pot);
+			update_sys(mol_chosen, num_mol_chosen, potential, -dE);
 		}
 		else
 		{
 			prob = ((double)rand() / (RAND_MAX));
-			dE = get_all_pair_potential_of_index(num_mol_chosen) - temp_total_pot;
+
 			if (prob < exp(dE / (m_temperature_range[m_current_index_temp] * K_B)) && mol_chosen.m_mol_type == lc)
 			{
-				update_sys(mol_chosen, num_mol_chosen, potential, temp_total_pot - current_total_pot);
+				update_sys(mol_chosen, num_mol_chosen, potential, -dE);
 			}
 		}
 		delete[] potential;
