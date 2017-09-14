@@ -158,7 +158,8 @@ void Init::add_randomization(vector<Molecule>& molecules, const vector< vector<i
 	for (unsigned int i = 0; i < colloid_molecules.size(); i++)
 	{
 		int index_to_manipulate = molecules_in_each_directions[1] * colloid_molecules[i].at(0) + colloid_molecules[i].at(1);
-		molecules[index_to_manipulate].m_mol_type = col;
+		//since it's a user input we need to be sure we are not out of range, use at instead of[]
+		molecules.at(index_to_manipulate).m_mol_type = col;
 	}
 #elif DIMENSIONS == 3
 	for (unsigned int i = 0; i < colloid_molecules.size(); i++)
@@ -166,7 +167,7 @@ void Init::add_randomization(vector<Molecule>& molecules, const vector< vector<i
 		int index_to_manipulate = molecules_in_each_directions[2] * molecules_in_each_directions[1] * colloid_molecules[i].at(0)
 			+ molecules_in_each_directions[1] * colloid_molecules[i].at(1)
 			+ colloid_molecules[i].at(2);
-		molecules[index_to_manipulate].m_mol_type = col;
+		molecules.at(index_to_manipulate).m_mol_type = col;
 	}
 #endif // DIMENSIONS
 }

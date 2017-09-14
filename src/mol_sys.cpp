@@ -46,9 +46,12 @@ void Mol_Sys::start_cooling()
 #ifdef SHOW_TEMP_TIMMING
 	clock_t prev, curr;
 	double duration;
-	double debug_count=0;
 	curr = clock();
 #endif // SHOW_TEMP_TIMMING
+#ifdef DEBUG_COUNT
+	double debug_count = 0;
+#endif // DEBUG_COUNT
+
 
 	m_file_writer->make_model_directory();
 	m_file_writer->write_state2xyz(m_molecules, m_temperature_range[0], m_potential);
@@ -68,15 +71,16 @@ void Mol_Sys::start_cooling()
 		curr = clock();
 		duration = (curr - prev) / (double)CLOCKS_PER_SEC;
 		cout << "temperature index " << m_current_index_temp << " took " << duration << " secs" << endl;
-
-		cout<<"pairs:"<<endl;
-		for (unsigned int i = 0; i < m_molecules.size(); i++){
-		  cout<<get_all_pair_potential_of_index(i)<<endl;
-		  debug_count+=get_all_pair_potential_of_index(i);}
-		cout<<"system potential:"<< m_potential<<endl;
-		cout<<"calc potential:"<< debug_count/2<<endl;
 #endif // SHOW_TEMP_TIMMING
-
+#ifdef DEBUG_COUNT
+		cout << "pairs:" << endl;
+		for (unsigned int i = 0; i < m_molecules.size(); i++) {
+			cout << get_all_pair_potential_of_index(i) << endl;
+			debug_count += get_all_pair_potential_of_index(i);
+		}
+		cout << "system potential:" << m_potential << endl;
+		cout << "calc potential:" << debug_count / 2 << endl;
+#endif // DEBUG_COUNT
 	}
 	m_file_writer->write_list_file();
 }
@@ -148,6 +152,12 @@ void Mol_Sys::monte_carlo()
 	std::default_random_engine spin_gen((unsigned int)time(0));
 	std::normal_distribution<double> spin_dist(0.0, STD_SPIN);
 
+	std::random_device  rand_dev;
+	std::mt19937 generator(rand_dev());
+
+	std::uniform_real_distribution<> distr_double(0, 1);
+	std::uniform_int_distribution<int> distr_int(0, m_molecules.size()-1);
+
 	/*std::random_device;  //Will be used to obtain a seed for the random number engine
 	std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
 	std::uniform_real_distribution<> dis(0, 1); */
@@ -158,10 +168,17 @@ void Mol_Sys::monte_carlo()
 		spin_norm = 0;
 
 		///choose molecule:
-		num_mol_chosen = rand() % m_molecules.size();
+		num_mol_chosen = distr_int(generator);
 
 		///change location around gauss dist:
 		mol_chosen = m_molecules[num_mol_chosen];
+#ifdef DONT_MOVE_COLS
+		if (mol_chosen.m_mol_type == col)
+			continue;
+#endif // DONT_MOVE_COLS
+
+
+
 		for (unsigned int j = 0; j < mol_chosen.m_location.size(); j++)
 		{
 #ifdef DEBUG
@@ -207,15 +224,15 @@ void Mol_Sys::monte_carlo()
 		}
 		current_total_pot = get_all_pair_potential_of_index(num_mol_chosen);
                 dE = current_total_pot - temp_total_pot;
-		if (temp_total_pot <= current_total_pot && mol_chosen.m_mol_type == lc)
+		if (temp_total_pot <= current_total_pot)
 		{
 			update_sys(mol_chosen, num_mol_chosen, potential, -dE);
 		}
 		else
 		{
-			prob = ((double)rand() / (RAND_MAX));
+			prob = distr_double(generator);
 
-			if (prob < exp(dE / (m_temperature_range[m_current_index_temp] * K_B)) && mol_chosen.m_mol_type == lc)
+			if (prob < exp(dE / (m_temperature_range[m_current_index_temp] * K_B)))
 			{
 				update_sys(mol_chosen, num_mol_chosen, potential, -dE);
 			}
