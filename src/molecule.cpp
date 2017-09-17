@@ -1,5 +1,5 @@
 #include "./../include/molecule.h"
-
+//oshri's commit from VS
 
 Molecule::Molecule(std::vector<double> loc, std::vector<double> spin, Mol_Type mol_type)
                     : m_location(loc), m_spin(spin), m_mol_type(mol_type){}
