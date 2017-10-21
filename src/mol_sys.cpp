@@ -76,10 +76,14 @@ void Mol_Sys::start_cooling()
 		cout << "pairs:" << endl;
 		for (unsigned int i = 0; i < m_molecules.size(); i++) {
 			cout << get_all_pair_potential_of_index(i) << endl;
-			debug_count += get_all_pair_potential_of_index(i);
+			debug_count += get_all_pair_potential_of_index(i)/2;
 		}
 		cout << "system potential:" << m_potential << endl;
-		cout << "calc potential:" << debug_count / 2 << endl;
+		cout << "calc potential:" << debug_count << endl;
+		if (abs(debug_count - m_potential) / abs(debug_count) > 0.01)
+		{
+			cout << "fail" << endl;
+		}
 #endif // DEBUG_COUNT
 	}
 	m_file_writer->write_list_file();
@@ -196,7 +200,7 @@ void Mol_Sys::monte_carlo()
 				}
 #endif //DEBUG
 				suggested_location = mol_chosen.m_location[j] + loc_dist(loc_gen);
-			} while ((suggested_location > m_sys_sizes[j]) || (suggested_location < 0) );
+			} while ((suggested_location > m_sys_sizes[j]) || (suggested_location < 0));
 			mol_chosen.m_location[j] = suggested_location;
 		}
 
@@ -223,7 +227,7 @@ void Mol_Sys::monte_carlo()
 			temp_total_pot += potential[j];
 		}
 		current_total_pot = get_all_pair_potential_of_index(num_mol_chosen);
-                dE = current_total_pot - temp_total_pot;
+		dE = current_total_pot - temp_total_pot;
 		if (temp_total_pot <= current_total_pot)
 		{
 			update_sys(mol_chosen, num_mol_chosen, potential, -dE);
@@ -237,6 +241,17 @@ void Mol_Sys::monte_carlo()
 				update_sys(mol_chosen, num_mol_chosen, potential, -dE);
 			}
 		}
+#ifdef DEBUG_COUNT
+		double debug_count = 0;
+		for (unsigned int i = 0; i < m_molecules.size(); i++) {
+			debug_count += get_all_pair_potential_of_index(i)/2;
+		}
+		if (abs(m_potential - debug_count) / abs(debug_count) > 0.01)
+		{
+			cout << "system potential:" << m_potential << endl;
+			cout << "calc potential:" << debug_count << endl;
+		}
+#endif // DEBUG_COUNT
 		delete[] potential;
 		//no need to delete mol_chosen since it wan't created by new it limited to this scope.
 	}
