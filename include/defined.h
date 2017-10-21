@@ -38,8 +38,8 @@
 #define D_0 0.7 /// the small size of the liquid crystal molecule.
 #define L_0 2.5 /// the long size of the liquid crystal molecule
 
-#define D_1 14.0 /// the radius of the colloid molecule
-#define L_1 14.001 ///D_1 + very small number, just to allow the expression (L_1 - D_1) / (L_1 - D_1)
+#define D_1 5.0 /// the radius of the colloid molecule
+#define L_1 5.001 ///D_1 + very small number, just to allow the expression (L_1 - D_1) / (L_1 - D_1)
 
 #define EPSILON0_0 K_B ///the epsilon0 of the LC
 #define EPSILON0_1 K_B ///the epsilon0 of the col

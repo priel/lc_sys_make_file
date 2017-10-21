@@ -119,6 +119,25 @@ vector<Molecule> Init::get_molecules(const vector<int>& molecules_in_each_direct
 void Init::add_randomization(vector<Molecule>& molecules, const vector< vector<int> > & colloid_molecules,
 	const vector<int> & molecules_in_each_directions, const vector<double> & sys_sizes)
 {
+
+//change the type to colloide for all the colloids molecules:
+#if DIMENSIONS == 2
+	for (unsigned int i = 0; i < colloid_molecules.size(); i++)
+	{
+		int index_to_manipulate = molecules_in_each_directions[1] * colloid_molecules[i].at(0) + colloid_molecules[i].at(1);
+		//since it's a user input we need to be sure we are not out of range, use at instead of[]
+		molecules.at(index_to_manipulate).m_mol_type = col;
+	}
+#elif DIMENSIONS == 3
+	for (unsigned int i = 0; i < colloid_molecules.size(); i++)
+	{
+		int index_to_manipulate = molecules_in_each_directions[2] * molecules_in_each_directions[1] * colloid_molecules[i].at(0)
+			+ molecules_in_each_directions[1] * colloid_molecules[i].at(1)
+			+ colloid_molecules[i].at(2);
+		molecules.at(index_to_manipulate).m_mol_type = col;
+	}
+#endif // DIMENSIONS
+
 	///initiate the random generators:
 	srand((unsigned int)time(0));
 	std::default_random_engine loc_gen((unsigned int)time(0));
@@ -129,6 +148,10 @@ void Init::add_randomization(vector<Molecule>& molecules, const vector< vector<i
 
 	for (unsigned int i = 0; i < molecules.size(); i++)
 	{
+#ifdef DONT_MOVE_COLS
+		if (molecules[i].m_mol_type == col)
+			continue;
+#endif //DONT_MOVE_COLS
 		//change the location with std of location:
 		for (int j = 0; j < DIMENSIONS; j++)
 		{
@@ -153,21 +176,4 @@ void Init::add_randomization(vector<Molecule>& molecules, const vector< vector<i
 			molecules[i].m_spin[j] = molecules[i].m_spin[j] / norm_spin;
 		}
 	}
-
-#if DIMENSIONS == 2
-	for (unsigned int i = 0; i < colloid_molecules.size(); i++)
-	{
-		int index_to_manipulate = molecules_in_each_directions[1] * colloid_molecules[i].at(0) + colloid_molecules[i].at(1);
-		//since it's a user input we need to be sure we are not out of range, use at instead of[]
-		molecules.at(index_to_manipulate).m_mol_type = col;
-	}
-#elif DIMENSIONS == 3
-	for (unsigned int i = 0; i < colloid_molecules.size(); i++)
-	{
-		int index_to_manipulate = molecules_in_each_directions[2] * molecules_in_each_directions[1] * colloid_molecules[i].at(0)
-			+ molecules_in_each_directions[1] * colloid_molecules[i].at(1)
-			+ colloid_molecules[i].at(2);
-		molecules.at(index_to_manipulate).m_mol_type = col;
-	}
-#endif // DIMENSIONS
 }
