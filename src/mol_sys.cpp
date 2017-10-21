@@ -16,8 +16,6 @@ Mol_Sys::Mol_Sys(vector<double> & sys_sizes, vector<Molecule> & mols, vector<dou
 	for (unsigned int i = 0; i < m_molecules.size(); i++)
 		for (unsigned int j = 0; j < i; j++)
 			m_pair_potentials[i][j] = m_molecules[i].potential(&m_molecules[j], m_model);
-
-	update_sys_potential();
 }
 
 
@@ -27,7 +25,7 @@ Mol_Sys::~Mol_Sys()
 	delete m_model;
 }
 
-void Mol_Sys::update_sys_potential()
+double Mol_Sys::get_sys_potential()
 {
 	///update the system potential based on the pair potential of all the molecules.
 
@@ -38,7 +36,7 @@ void Mol_Sys::update_sys_potential()
 		potential += get_all_pair_potential_of_index(i);
 	}
 	///since we calculated the pair potential i,j for each pair twice, once for i and once for j we need to divide by two
-	m_potential = potential / 2;
+	return potential / 2;
 }
 
 void Mol_Sys::start_cooling()
@@ -50,8 +48,9 @@ void Mol_Sys::start_cooling()
 #endif // SHOW_TEMP_TIMMING
 
 
+	double sys_potential = get_sys_potential();
 	m_file_writer->make_model_directory();
-	m_file_writer->write_state2xyz(m_molecules, m_temperature_range[0], m_potential);
+	m_file_writer->write_state2xyz(m_molecules, m_temperature_range[0], sys_potential);
 
 	/// in future will use some module how to cool the system.
 	/// currently will just perform x monte carlos for each temperature from the array.
@@ -61,26 +60,15 @@ void Mol_Sys::start_cooling()
 		/// need to add print of the system here to xyz.
 		/// first implement just a simple print
 		monte_carlo();
-		m_file_writer->write_state2xyz(m_molecules, m_temperature_range[m_current_index_temp], m_potential);
+		sys_potential = get_sys_potential();
+		m_file_writer->write_state2xyz(m_molecules, m_temperature_range[m_current_index_temp], sys_potential);
 
 #ifdef SHOW_TEMP_TIMMING
 		prev = curr;
 		curr = clock();
 		duration = (curr - prev) / (double)CLOCKS_PER_SEC;
-		cout << "temperature index " << m_current_index_temp << " took " << duration << " secs. potential: " << m_potential << endl;
+		cout << "temperature index " << m_current_index_temp << " took " << duration << " secs. potential = " << sys_potential << endl;
 #endif // SHOW_TEMP_TIMMING
-
-#ifdef DEBUG_COUNT
-		double debug_count = 0;
-		for (unsigned int i = 0; i < m_molecules.size(); i++) {
-			debug_count += get_all_pair_potential_of_index(i) / 2;
-		}
-		if (abs(m_potential - debug_count) / abs(debug_count) > 0.01)
-		{
-			cout << "system potential:" << m_potential << endl;
-			cout << "calc potential:" << debug_count << endl;
-		}
-#endif // DEBUG_COUNT
 	}
 	m_file_writer->write_list_file();
 }
@@ -122,11 +110,6 @@ void Mol_Sys::update_sys(Molecule &mol_chosen, unsigned int index, double* poten
 	///update the columns:
 	for (unsigned int i = index + 1; i < m_molecules.size(); i++)
 		m_pair_potentials[i][index] = potential[i];
-
-	m_potential += tot_pot_update;
-
-
-
 
 }
 
@@ -241,18 +224,6 @@ void Mol_Sys::monte_carlo()
 
 		delete[] potential;
 		//no need to delete mol_chosen since it wan't created by new it limited to this scope.
-#ifdef DEBUG_COUNT
-		double debug_count = 0;
-		for (unsigned int i = 0; i < m_molecules.size(); i++) {
-			debug_count += get_all_pair_potential_of_index(i) / 2;
-		}
-		if (abs(m_potential - debug_count) / abs(debug_count) > 0.01)
-		{
-			cout << "system potential:" << m_potential << endl;
-			cout << "calc potential:" << debug_count << endl;
-		}
-#endif // DEBUG_COUNT
-
 	}
 }
 

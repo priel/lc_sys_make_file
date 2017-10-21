@@ -35,8 +35,6 @@ class Mol_Sys
 
 		vector<Molecule> m_molecules; /// ///pointer to the first molecule array.
 
-        double m_potential; /// hold the current system total potential
-
 		vector<double> m_temperature_range; ///hold the range of temperature we want to check (Starting from 0 to max_temp -1;
 		unsigned int m_current_index_temp;
 
@@ -63,7 +61,7 @@ class Mol_Sys
 
 
         /// update the system potential based on the pair potential
-        void update_sys_potential();
+        double get_sys_potential();
 
 		/// in future will use some module how to cool the system.
 		/// currently will just perform x monte carlos for each temperature from the array.
