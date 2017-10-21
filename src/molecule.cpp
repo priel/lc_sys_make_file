@@ -134,13 +134,6 @@ double Molecule::potential(const Molecule * mol, const Model * model)
     epsilon = epsilon0 * pow(epsilon_ni, NI) * pow(epsilon_miu, MIU);
 
     potential = (4 * epsilon * (pow(R,12) - pow(R,6)));
-    if (potential < -2 * K_B)
-    {
-		cout <<"BAD POTENTIAL"<<endl;
-        cout<<"epsilon:"<<epsilon<<endl;
-		cout<<"R:"<<R<<endl;
-		exit(EXIT_FAILURE);
-    }
     return potential;
 
 }
