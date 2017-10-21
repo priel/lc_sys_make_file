@@ -5,7 +5,7 @@
 #define K_B 1.38066e-23
 
 /// model defined:
-#define MODEL_NAME "7x7x7_small_col" ///the model name, this will be the folder name in the run directory
+#define MODEL_NAME "try_run" ///the model name, this will be the folder name in the run directory
 
 #define DIMENSIONS 3
 #define MOLECULES_IN_EACH_DIRECTION {9,9,9} /// #moleuclues will be the product of all elements.
@@ -35,11 +35,11 @@
 //can't be zero!
 
 //L > D
-#define D_0 0.3 /// the small size of the liquid crystal molecule.
-#define L_0 1.5 /// the long size of the liquid crystal molecule
+#define D_0 0.7 /// the small size of the liquid crystal molecule.
+#define L_0 3.0 /// the long size of the liquid crystal molecule
 
-#define D_1 3.0 /// the radius of the colloid molecule
-#define L_1 3.001 ///D_1 + very small number, just to allow the expression (L_1 - D_1) / (L_1 - D_1)
+#define D_1 7.0 /// the radius of the colloid molecule
+#define L_1 7.001 ///D_1 + very small number, just to allow the expression (L_1 - D_1) / (L_1 - D_1)
 
 #define EPSILON0_0 K_B ///the epsilon0 of the LC
 #define EPSILON0_1 K_B ///the epsilon0 of the col

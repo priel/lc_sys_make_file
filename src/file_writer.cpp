@@ -26,13 +26,13 @@ void File_Writer::make_model_directory()
 #if defined _MSC_VER
 		nError = _mkdir(dir_to_create.c_str());
 #elif defined __GNUC__
-		nErrorLinux = mkdir(dir_to_create.c_str(), 0777);
+		nError = mkdir(dir_to_create.c_str(), 0777);
 #endif
 #if defined DEBUG
 		if (i>300)
 		{
 			cout << "couldnt craete file after 300 tries, this could be because there is no runs directory. exiting.." << endl;
-			cout << "GNUC defined, error is " << nErrorLinux << ". windows runs error is " << nErrorLinux << endl;
+			cout << "GNUC defined, error is " << nErrorLinux << endl;
 			exit(EXIT_FAILURE);
 		}
 #endif
@@ -59,7 +59,7 @@ void File_Writer::make_model_directory()
 #endif
 	if (nError != 0)
 	{
-		cout << "couldnt create output directory, exiting..." << endl;
+		cout << "couldnt create output directory, exiting..." << dir_to_create << endl;
 		exit(EXIT_FAILURE);
 	}
 }
