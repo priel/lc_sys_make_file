@@ -90,9 +90,9 @@ void File_Writer::write_state2xyz(const vector<Molecule> & molecules, double tem
 
 	int line_counter = num_of_molecules;
 #if DIMENSIONS == 2
-	line_counter += (DEGREES_IN_CIRCLE / DIF_ANGLES_COL_REPRESENTATION) * num_col_mol - 1;
+	line_counter += (DEGREES_IN_CIRCLE / DIF_ANGLES_COL_REPRESENTATION) * num_col_mol - num_col_mol;
 #elif DIMENSIONS == 3
-	line_counter += (DEGREES_IN_CIRCLE / DIF_ANGLES_COL_REPRESENTATION) * (DEGREES_IN_CIRCLE / DIF_ANGLES_COL_REPRESENTATION / 2) * num_col_mol - 1;
+	line_counter += (DEGREES_IN_CIRCLE / DIF_ANGLES_COL_REPRESENTATION) * (DEGREES_IN_CIRCLE / DIF_ANGLES_COL_REPRESENTATION / 2) * num_col_mol - num_col_mol;
 #endif
 	xyz_file << line_counter << endl;
 	xyz_file << "Liquid Crystals with Colloide in temperature=" << temperature << ", and potential=" << potential << endl;
