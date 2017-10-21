@@ -48,9 +48,6 @@ void Mol_Sys::start_cooling()
 	double duration;
 	curr = clock();
 #endif // SHOW_TEMP_TIMMING
-#ifdef DEBUG_COUNT
-	double debug_count = 0;
-#endif // DEBUG_COUNT
 
 
 	m_file_writer->make_model_directory();
@@ -70,19 +67,18 @@ void Mol_Sys::start_cooling()
 		prev = curr;
 		curr = clock();
 		duration = (curr - prev) / (double)CLOCKS_PER_SEC;
-		cout << "temperature index " << m_current_index_temp << " took " << duration << " secs" << endl;
+		cout << "temperature index " << m_current_index_temp << " took " << duration << " secs. potential: " << m_potential << endl;
 #endif // SHOW_TEMP_TIMMING
+
 #ifdef DEBUG_COUNT
-		cout << "pairs:" << endl;
+		double debug_count = 0;
 		for (unsigned int i = 0; i < m_molecules.size(); i++) {
-			cout << get_all_pair_potential_of_index(i) << endl;
-			debug_count += get_all_pair_potential_of_index(i)/2;
+			debug_count += get_all_pair_potential_of_index(i) / 2;
 		}
-		cout << "system potential:" << m_potential << endl;
-		cout << "calc potential:" << debug_count << endl;
-		if (abs(debug_count - m_potential) / abs(debug_count) > 0.01)
+		if (abs(m_potential - debug_count) / abs(debug_count) > 0.01)
 		{
-			cout << "fail" << endl;
+			cout << "system potential:" << m_potential << endl;
+			cout << "calc potential:" << debug_count << endl;
 		}
 #endif // DEBUG_COUNT
 	}
@@ -168,7 +164,6 @@ void Mol_Sys::monte_carlo()
 
 	for (int i = 0; i < NUMBER_OF_STEPS; i++)
 	{
-		temp_total_pot = 0;
 		spin_norm = 0;
 
 		///choose molecule:
@@ -198,6 +193,7 @@ void Mol_Sys::monte_carlo()
 					cout << "you probably gave location for molecule such that it excceed dimension " << j << "\n";
 					exit(EXIT_FAILURE);
 				}
+				
 #endif //DEBUG
 				suggested_location = mol_chosen.m_location[j] + loc_dist(loc_gen);
 			} while ((suggested_location > m_sys_sizes[j]) || (suggested_location < 0));
@@ -220,6 +216,7 @@ void Mol_Sys::monte_carlo()
 		///since all changed is this 1 molecule we will:
 		/// calculate row of for the potential done by this molecule
 		potential = new double[m_molecules.size()];
+		temp_total_pot = 0;
 		for (unsigned int j = 0; j < m_molecules.size(); j++)
 		{
 			if (j == num_mol_chosen) continue;
@@ -241,10 +238,13 @@ void Mol_Sys::monte_carlo()
 				update_sys(mol_chosen, num_mol_chosen, potential, -dE);
 			}
 		}
+
+		delete[] potential;
+		//no need to delete mol_chosen since it wan't created by new it limited to this scope.
 #ifdef DEBUG_COUNT
 		double debug_count = 0;
 		for (unsigned int i = 0; i < m_molecules.size(); i++) {
-			debug_count += get_all_pair_potential_of_index(i)/2;
+			debug_count += get_all_pair_potential_of_index(i) / 2;
 		}
 		if (abs(m_potential - debug_count) / abs(debug_count) > 0.01)
 		{
@@ -252,8 +252,7 @@ void Mol_Sys::monte_carlo()
 			cout << "calc potential:" << debug_count << endl;
 		}
 #endif // DEBUG_COUNT
-		delete[] potential;
-		//no need to delete mol_chosen since it wan't created by new it limited to this scope.
+
 	}
 }
 

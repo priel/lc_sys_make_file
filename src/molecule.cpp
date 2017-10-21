@@ -35,7 +35,6 @@ double Molecule::potential(const Molecule * mol, const Model * model)
         r2 = mol->m_location[2] - m_location[2];
     #endif // DIMENSIONS%
 
-
     #if DIMENSIONS == 2
         norm_r = sqrt(r0*r0 + r1*r1);
         dot_spin1_nr = (m_spin[0]*r0 + m_spin[1]*r1) / norm_r;
@@ -135,13 +134,13 @@ double Molecule::potential(const Molecule * mol, const Model * model)
     epsilon = epsilon0 * pow(epsilon_ni, NI) * pow(epsilon_miu, MIU);
 
     potential = (4 * epsilon * (pow(R,12) - pow(R,6)));
-    if (potential < -2*K_B)
-      {
-	cout <<"BAD POTENTIAL"<<endl;
+    if (potential < -2 * K_B)
+    {
+		cout <<"BAD POTENTIAL"<<endl;
         cout<<"epsilon:"<<epsilon<<endl;
-	cout<<"R:"<<R<<endl;
-	exit(EXIT_FAILURE);
-      }
+		cout<<"R:"<<R<<endl;
+		exit(EXIT_FAILURE);
+    }
     return potential;
 
 }

@@ -18,9 +18,9 @@ Model::Model()
     m_alpha_01 = pow(((pow(L_0, 2) - pow(D_0, 2) ) * (pow(L_1, 2) + pow(D_0, 2) )
                /  (pow(L_1, 2) - pow(D_1, 2) ) / (pow(L_0, 2) + pow(D_1, 2) ) ) ,0.25); // i=0,j=1
 
-    m_chi_tag_00 = (1 - pow(EE_DIV_ES_0 ,( 1 / MIU )) / (1 + pow(EE_DIV_ES_0,(1/ MIU)) ) );
-    m_chi_tag_11 = (1 - pow(EE_DIV_ES_1 ,( 1 / MIU )) / (1 + pow(EE_DIV_ES_1,(1/ MIU)) ) );
-    m_chi_tag_01 = (1 - pow(EE_DIV_ES_0 * EE_DIV_ES_1, (1 / (2 * MIU)) ) / (1 + pow(EE_DIV_ES_0 * EE_DIV_ES_1, 1 / (2 * MIU)) ) );
+    m_chi_tag_00 = (1 - pow(EE_DIV_ES_0 ,( 1 / MIU ))) / (1 + pow(EE_DIV_ES_0,(1/ MIU)) );
+    m_chi_tag_11 = (1 - pow(EE_DIV_ES_1 ,( 1 / MIU ))) / (1 + pow(EE_DIV_ES_1,(1/ MIU)) );
+    m_chi_tag_01 = (1 - pow(EE_DIV_ES_0 * EE_DIV_ES_1, (1 / (2 * MIU)) )) / (1 + pow(EE_DIV_ES_0 * EE_DIV_ES_1, 1 / (2 * MIU)) );
 
     m_alpha_tag_00 = sqrt(1 / (1 + pow(EE_DIV_ES_0, (1/MIU)) ) );
     m_alpha_tag_11 = sqrt(1 / (1 + pow(EE_DIV_ES_1, (1/MIU)) ) );

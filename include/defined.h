@@ -8,12 +8,12 @@
 #define MODEL_NAME "3D_update" ///the model name, this will be the folder name in the run directory
 
 #define DIMENSIONS 3
-#define MOLECULES_IN_EACH_DIRECTION {2,2,2} /// #moleuclues will be the product of all elements.
+#define MOLECULES_IN_EACH_DIRECTION {11,11,11} /// #moleuclues will be the product of all elements.
 #define SYSTEM_SIZES {11,11,11} /// the location of the molecules cant exceed the size of the system.
 
 /// colloid molecules - define all the molecules in the system
 #define COLLOID_MOLS {\
-    {1,1,1}\
+    {5,5,5}\
 }
 
 //#define IGNORE_COLLOIDS ///this defined tell the program to ignore colloid molecules, comment in order to use colloids.
