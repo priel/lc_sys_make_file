@@ -20,27 +20,28 @@ void File_Writer::make_model_directory()
 	string dir_to_create = original_dir;
 	int nError = 0, i = 0, nErrorLinux = 0;
 
+
 	do
 	{
 #if defined _MSC_VER
 		nError = _mkdir(dir_to_create.c_str());
 #elif defined __GNUC__
-		nError = mkdir(dir_to_create.c_str(), 0777);
+		nErrorLinux = mkdir(dir_to_create.c_str(), 0777);
 #endif
 #if defined DEBUG
 		if (i>300)
 		{
 			cout << "couldnt craete file after 300 tries, this could be because there is no runs directory. exiting.." << endl;
-			cout << "GNUC defined, error is " << nError << "runs erro r" << nErrorLinux << endl;
+			cout << "GNUC defined, error is " << nErrorLinux << ". windows runs error is " << nErrorLinux << endl;
 			exit(EXIT_FAILURE);
 		}
 #endif
-		i++;
-		dir_to_create = original_dir + "_" + to_string(i);
+		if (nError != 0)
+		{
+			i++;
+			dir_to_create = original_dir + "_" + to_string(i);
+		}
 	} while (nError != 0);
-
-	i--;
-	dir_to_create = original_dir + "_" + to_string(i);
 
 	//copy the model file to the the model directory
 	std::ifstream  src(".//include//defined.h", std::ios::binary);
