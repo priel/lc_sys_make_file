@@ -8,12 +8,12 @@
 #define MODEL_NAME "finding_the_bug" ///the model name, this will be the folder name in the run directory
 
 #define DIMENSIONS 3
-#define MOLECULES_IN_EACH_DIRECTION {5,5,5} /// #moleuclues will be the product of all elements.
-#define SYSTEM_SIZES {5,5,5} /// the location of the molecules cant exceed the size of the system.
+#define MOLECULES_IN_EACH_DIRECTION {9,9,9} /// #moleuclues will be the product of all elements.
+#define SYSTEM_SIZES {9,9,9} /// the location of the molecules cant exceed the size of the system.
 
 /// colloid molecules - define all the molecules in the system
 #define COLLOID_MOLS {\
-    {2,2,2}\
+    {4,4,4}\
 }
 
 //#define IGNORE_COLLOIDS ///this defined tell the program to ignore colloid molecules, comment in order to use colloids.
@@ -38,8 +38,8 @@
 #define D_0 0.7 /// the small size of the liquid crystal molecule.
 #define L_0 2.5 /// the long size of the liquid crystal molecule
 
-#define D_1 5.0 /// the radius of the colloid molecule
-#define L_1 5.001 ///D_1 + very small number, just to allow the expression (L_1 - D_1) / (L_1 - D_1)
+#define D_1 7.0 /// the radius of the colloid molecule
+#define L_1 9.001 ///D_1 + very small number, just to allow the expression (L_1 - D_1) / (L_1 - D_1)
 
 #define EPSILON0_0 K_B ///the epsilon0 of the LC
 #define EPSILON0_1 K_B ///the epsilon0 of the col
