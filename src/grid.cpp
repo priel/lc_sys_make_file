@@ -3,25 +3,15 @@
 Grid::Grid(vector<double> & sys_sizes, BoundaryType bc, int range)
 	:grid_bc(bc), grid_range(range)
 {
+	grid_mol_num = 0;
 	vector<int> grid_size(sys_sizes.begin(), sys_sizes.end());
 	if (grid_size.size() == 2) {
-		/*grid_molecules_2D = new vector<Molecule*> * [grid_size[0]];
-		for (int i = 0; i < grid_size[0]; i++) {
-			   grid_2D[i] = new vector<Molecule*>[grid_size[1]];
-		}*/
 		grid_2D.resize(grid_size[0]);
 		for (int i = 0; i < grid_size[0]; i++) {
 			grid_2D[i].resize(grid_size[1]);
 		}
 	}
 	else if (grid_size.size() == 3) {
-		/*grid_molecules_3D = new vector<Molecule*> ** [grid_size[0]];
-		for (int i = 0; i < grid_size[0]; i++) {
-			grid_molecules_3D[i] = new vector<Molecule*> * [grid_size[1]];
-			for (int j = 0; j < grid_size[1]; j++) {
-				grid_molecules_3D[i][j] = new vector<Molecule*>[grid_size[2]];
-			}
-		}*/
 		grid_3D.resize(grid_size[0]);
 		for (int i = 0; i < grid_size[0]; i++) {
 			grid_3D[i].resize(grid_size[1]);
@@ -39,22 +29,6 @@ Grid::Grid(vector<double> & sys_sizes, BoundaryType bc, int range)
 }
 
 Grid::~Grid() {
-	/*if (grid_size.size() == 2) {
-		for (int i = 0; i < Grid::grid_size[0]; i++) {
-			delete grid_molecules_2D[i];
-		}
-		delete grid_molecules_2D;
-	}
-
-	else if (grid_size.size() == 3) {
-		for (int i = 0; i < Grid::grid_size[0]; i++) {
-			for (int j = 0; j < Grid::grid_size[1]; j++) {
-				delete grid_molecules_3D[i][j];
-			}
-			delete grid_molecules_3D[i];
-		}
-		delete grid_molecules_3D;
-	}*/
 }
 
 
@@ -62,9 +36,11 @@ void Grid::RegisterMol(Molecule* mol_ptr) {
 	vector<int> grid_pt = getGridPoint(mol_ptr->m_location);
 	if (grid_pt.size() == 2) {
 		grid_2D[grid_pt[0]][grid_pt[1]].push_back(mol_ptr);
+		grid_mol_num++;
 	}
 	else if (grid_pt.size() == 3) {
 		grid_3D[grid_pt[0]][grid_pt[1]][grid_pt[2]].push_back(mol_ptr);
+		grid_mol_num++;
 	}
 	else {
 		cout << "cannot initiallize grid. dimension must be 2 or 3" << endl;
@@ -73,12 +49,20 @@ void Grid::RegisterMol(Molecule* mol_ptr) {
 }
 
 void Grid::RemoveMol(Molecule* mol_ptr) {
+	int size1;
+	int size2;
 	vector<int> grid_pt = getGridPoint(mol_ptr->m_location);
 	if (grid_pt.size() == 2) {
 		for (vector<Molecule*>::iterator it = grid_2D[grid_pt[0]][grid_pt[1]].begin();
 			it != grid_2D[grid_pt[0]][grid_pt[1]].end(); it++) {
 			if ((*it)->ID == mol_ptr->ID) {
+				size1 = grid_2D[grid_pt[0]][grid_pt[1]].size();
 				grid_2D[grid_pt[0]][grid_pt[1]].erase(it);
+				size2 = grid_2D[grid_pt[0]][grid_pt[1]].size();
+				if (size2 != size1 - 1) {
+					cout << "ERROR";
+				}
+				grid_mol_num--;
 				break;
 			}
 		}
@@ -88,6 +72,7 @@ void Grid::RemoveMol(Molecule* mol_ptr) {
 			it != grid_3D[grid_pt[0]][grid_pt[1]][grid_pt[2]].end(); it++) {
 			if ((*it)->ID == mol_ptr->ID) {
 				grid_3D[grid_pt[0]][grid_pt[1]][grid_pt[2]].erase(it);
+				grid_mol_num--;
 				break;
 			}
 		}

@@ -46,6 +46,7 @@ Mol_Sys::~Mol_Sys()
 {
 	delete m_file_writer;
 	delete m_model;
+	delete m_grid;
 }
 
 
@@ -262,6 +263,7 @@ void Mol_Sys::monte_carlo()
 		temp_nbr_shift = m_grid->getNbr(mol_chosen.m_location, 1).shift;
 		temp_total_pot = 0;
 		grid_cell_count = 0;
+		potential.resize(0);
 		for (vector<Molecule*>::iterator it = temp_nbr.begin(); it != temp_nbr.end(); it++)
 		{
 			//NULL value separate between nbr's in the same grid cell

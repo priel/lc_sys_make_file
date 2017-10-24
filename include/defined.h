@@ -36,11 +36,11 @@
 	//can't be zero!
 
 	//L > D
-#define D_0 0.3 /// the small size of the liquid crystal molecule.
-#define L_0 1.5 /// the long size of the liquid crystal molecule
+#define D_0 0.7 /// the small size of the liquid crystal molecule.
+#define L_0 4.5 /// the long size of the liquid crystal molecule
 
-#define D_1 3.0 /// the radius of the colloid molecule
-#define L_1 3.001 ///D_1 + very small number, just to allow the expression (L_1 - D_1) / (L_1 - D_1)
+#define D_1 4.0 /// the radius of the colloid molecule
+#define L_1 4.001 ///D_1 + very small number, just to allow the expression (L_1 - D_1) / (L_1 - D_1)
 
 #define BOUNDARY 1 // possible values {Box = 0, Periodic = 1}
 #define RANGE 1 // number of grid cells to include in every direction in potential calculation.
