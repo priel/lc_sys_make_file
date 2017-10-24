@@ -24,7 +24,7 @@ void File_Writer::make_model_directory()
 	do
 	{
 #if defined _MSC_VER
-		nError = _mkdir(dir_to_create.c_str());
+		nError = _mkdir(dir_to_create.c_str()); 
 #elif defined __GNUC__
 		nError = mkdir(dir_to_create.c_str(), 0777);
 #endif

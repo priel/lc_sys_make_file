@@ -18,6 +18,7 @@
 #include "./molecule.h"
 #include "./model.h"
 #include "./file_writer.h"
+#include "./grid.h"
 
 using namespace std;
 
@@ -26,7 +27,7 @@ class Mol_Sys
     public:
 
         /// this is some kind of custom constructor where all the parameters are pre-defined.
-        Mol_Sys(vector<double> & sys_sizes, vector<Molecule> & mols, vector<double> temperature_range);
+        Mol_Sys(vector<double> & sys_sizes, vector<Molecule> & mols, vector<double> temperature_range, BoundaryType bc, int range);
 
         ///nothing has made with new, nothing to delete.
         ~Mol_Sys();
@@ -34,12 +35,13 @@ class Mol_Sys
         vector<double> m_sys_sizes; ///array in the length of dimensions which determine the x,y,(z) of the system.
 
 		vector<Molecule> m_molecules; /// ///pointer to the first molecule array.
-
 		vector<double> m_temperature_range; ///hold the range of temperature we want to check (Starting from 0 to max_temp -1;
 		unsigned int m_current_index_temp;
 
 		Model* m_model; ///hold model calculated parameters
-
+		Grid* m_grid;
+		BoundaryType m_bc = Periodic;
+		int m_range; // number of grid cells to include in every direction in potential calculation.
 		File_Writer* m_file_writer; ///class in charge of files outputs
 
 		/// have all the pairs of potential for example pair_potential[0][1] has the potential between molecule 0 and 1.
@@ -68,11 +70,11 @@ class Mol_Sys
         void start_cooling();
         
 		///get the potential of all the pairs with the index
-        double get_all_pair_potential_of_index(unsigned int index);
+        double get_all_pair_potential_of_index(unsigned int index, vector<Molecule*> nbr_vec);
 		
 		/// in charge of updating the system.
-        void update_sys(Molecule &mol_chosen, unsigned int index, double* potential, double tot_pot_update);
-        
+		void update_sys(Molecule &mol_chosen, vector<Molecule*> nbr_vec, vector<double> potential);
+
 		///doing NUMBER_OF_STEPS times monte carlo steps
         void monte_carlo();
         

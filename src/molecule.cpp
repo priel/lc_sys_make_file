@@ -13,8 +13,8 @@ Molecule::Molecule()
 
 Molecule::~Molecule(){}
 
-
-double Molecule::potential(const Molecule * mol, const Model * model)
+//TODO :use internal function in overloading
+double Molecule::potential(const Molecule * mol, const Model * model, const vector<int>& shift)
 {
   double potential;
 
@@ -23,17 +23,25 @@ double Molecule::potential(const Molecule * mol, const Model * model)
     double norm_r, sigma0, chi, alpha, first, second, sigma, R;
     double epsilon, epsilon_ni, epsilon_miu, epsilon0, alpha_tag, chi_tag;
     double dot_spin1_nr, dot_spin2_nr, dot_spin1_spin2;
+	double r0, r1;
+#if DIMENSIONS == 3
+	double r2;
+#endif // DIMENSIONS
 
-    double r0, r1;
-    #if DIMENSIONS == 3
-        double r2;
-    #endif // DIMENSIONS
-
-    r0 = mol->m_location[0] - m_location[0];
-    r1 = mol->m_location[1] - m_location[1];
-    #if DIMENSIONS == 3
-        r2 = mol->m_location[2] - m_location[2];
-    #endif // DIMENSIONS%
+	if (shift.size() == 0) {
+		r0 = mol->m_location[0] - m_location[0];
+		r1 = mol->m_location[1] - m_location[1];
+#if DIMENSIONS == 3
+		r2 = mol->m_location[2] - m_location[2];
+#endif // DIMENSIONS%
+	}
+	else {
+		r0 = mol->m_location[0] - m_location[0] - shift[0];
+		r1 = mol->m_location[1] - m_location[1] - shift[1];
+#if DIMENSIONS == 3
+		r2 = mol->m_location[2] - m_location[2] - shift[2];
+#endif // DIMENSIONS%
+	}
 
     #if DIMENSIONS == 2
         norm_r = sqrt(r0*r0 + r1*r1);
@@ -137,4 +145,3 @@ double Molecule::potential(const Molecule * mol, const Model * model)
     return potential;
 
 }
-

@@ -89,8 +89,8 @@ vector<Molecule> Init::get_molecules(const vector<int>& molecules_in_each_direct
 		for (int j = 0; j < molecules_in_each_directions[1]; j++)
 		{
 			int molecule_to_manipulate = molecules_in_each_directions[1] * i + j;
-			molecules[molecule_to_manipulate].m_location[0] = i * INIT_SPACING;
-			molecules[molecule_to_manipulate].m_location[1] = j * INIT_SPACING;
+			molecules[molecule_to_manipulate].m_location[0] = i * INIT_SPACING - 0.5;
+			molecules[molecule_to_manipulate].m_location[1] = j * INIT_SPACING - 0.5;
 			molecules[molecule_to_manipulate].m_spin[0] = initial_spin[0];
 			molecules[molecule_to_manipulate].m_spin[1] = initial_spin[1];
 		}
@@ -103,9 +103,9 @@ vector<Molecule> Init::get_molecules(const vector<int>& molecules_in_each_direct
 			for (int k = 0; k < molecules_in_each_directions[2]; k++)
 			{
 				int molecule_to_manipulate = molecules_in_each_directions[2] * molecules_in_each_directions[1] * i + molecules_in_each_directions[2] * j + k;
-				molecules[molecule_to_manipulate].m_location[0] = i * INIT_SPACING;
-				molecules[molecule_to_manipulate].m_location[1] = j * INIT_SPACING;
-				molecules[molecule_to_manipulate].m_location[2] = k * INIT_SPACING;
+				molecules[molecule_to_manipulate].m_location[0] = i * INIT_SPACING - 0.5;
+				molecules[molecule_to_manipulate].m_location[1] = j * INIT_SPACING - 0.5;
+				molecules[molecule_to_manipulate].m_location[2] = k * INIT_SPACING - 0.5;
 				molecules[molecule_to_manipulate].m_spin[0] = initial_spin[0];
 				molecules[molecule_to_manipulate].m_spin[1] = initial_spin[1];
 				molecules[molecule_to_manipulate].m_spin[2] = initial_spin[2];
@@ -114,6 +114,14 @@ vector<Molecule> Init::get_molecules(const vector<int>& molecules_in_each_direct
 	}
 #endif //DIMENSIONS
 	return molecules;
+}
+
+BoundaryType Init::get_boundary_condition() {
+	return static_cast<BoundaryType>(BOUNDARY);
+}
+
+int Init::get_range() {
+	return RANGE;
 }
 
 void Init::add_randomization(vector<Molecule>& molecules, const vector< vector<int> > & colloid_molecules,

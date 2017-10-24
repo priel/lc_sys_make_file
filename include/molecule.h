@@ -23,13 +23,13 @@ class Molecule
          the destructor will always delete the vectors */
         virtual ~Molecule();
 
-        double potential(const Molecule* mol, const Model* model);
+		double Molecule::potential(const Molecule * mol, const Model * model, const vector<int>& shift = vector<int>());
 
         std::vector<double> m_location;
         std::vector<double> m_spin;
 
         Mol_Type m_mol_type;
-
+		int ID; //free ID field for user convenience (= index number in m_pair_potentials)
 
     protected:
 
