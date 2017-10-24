@@ -17,12 +17,12 @@ public:
 	void RegisterMol(Molecule* mol_ptr);
 	void RemoveMol(Molecule* mol_ptr);
 
-	struct Nbr
+	struct Neighbor
 	{
 		vector<Molecule*> nbr_vec;
 		vector<vector<int>> shift;
 	};
-	Nbr getNbr(vector<double> location, bool shift); //if shift==1 the function calculate the shift field
+	Neighbor getNbr(vector<double> location, bool shift); //if shift==1 the function calculate the shift field
 
 	static int mod(int a, int b); //TODO :move outside to an external class
 	int grid_mol_num;
